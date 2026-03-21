@@ -91,7 +91,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <Button
               variant="secondary"
-              className="bg-accent text-primary hover:bg-accent/90"
+              className="bg-secondary text-primary hover:bg-secondary/90"
             >
               Admin Login
             </Button>
@@ -143,7 +143,7 @@ export default function Navbar() {
             <div className="px-4 pt-2">
               <Button
                 variant="secondary"
-                className="w-full bg-accent text-primary hover:bg-accent/90"
+                className="w-full bg-secondary text-primary hover:bg-secondary/90"
               >
                 Admin Login
               </Button>

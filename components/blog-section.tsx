@@ -60,10 +60,10 @@ export default function BlogSection() {
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
               <BookOpen className="w-8 h-8 text-accent" />
-              <h2 className="text-4xl md:text-5xl font-bold text-primary">Latest Articles</h2>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary">Blogs</h2>
             </div>
             <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
-              Explore my latest healthcare insights and medical knowledge shared through in-depth articles.
+              Explore my latest healthcare insights and medical knowledge shared through in-depth blogs.
             </p>
           </div>
 
@@ -92,7 +92,7 @@ export default function BlogSection() {
 
                     {/* Read More Button */}
                     <div className="pt-4 border-t border-border">
-                      <div className="flex items-center gap-2 text-accent font-semibold hover:gap-3 transition-all">
+                      <div className="flex items-center gap-2 text-secondary font-semibold hover:gap-3 transition-all">
                         Read More
                         <ArrowRight className="w-4 h-4" />
                       </div>
@@ -101,16 +101,6 @@ export default function BlogSection() {
                 </Card>
               </Link>
             ))}
-          </div>
-
-          {/* View All Button */}
-          <div className="text-center pt-8">
-            <Button
-              asChild
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg rounded-lg"
-            >
-              <Link href="/blog">View All Articles</Link>
-            </Button>
           </div>
         </div>
       </div>

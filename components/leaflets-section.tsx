@@ -94,7 +94,7 @@ export default function LeafletsSection() {
                   {/* Download Button */}
                   <Button
                     onClick={() => handleDownload(leaflet.title)}
-                    className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold rounded-lg mt-auto flex items-center justify-center gap-2"
+                    className="w-full bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-lg mt-auto flex items-center justify-center gap-2"
                   >
                     <Download className="w-4 h-4" />
                     Download PDF
@@ -102,22 +102,6 @@ export default function LeafletsSection() {
                 </div>
               </Card>
             ))}
-          </div>
-
-          {/* Additional Info */}
-          <div className="bg-gradient-to-r from-primary to-accent/80 text-primary-foreground rounded-lg p-8 md:p-12 text-center">
-            <h3 className="text-2xl md:text-3xl font-bold mb-4">
-              Need More Information?
-            </h3>
-            <p className="text-primary-foreground/90 mb-6 max-w-2xl mx-auto">
-              Contact us directly to request specific health information or schedule a consultation with Dr. Khurram Baqai.
-            </p>
-            <Button
-              asChild
-              className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold px-8 py-3 rounded-lg"
-            >
-              <a href="#contact">Contact Us</a>
-            </Button>
           </div>
         </div>
       </div>

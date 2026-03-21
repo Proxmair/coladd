@@ -119,7 +119,7 @@ export default function ContactSection() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold py-3 text-lg rounded-lg transition-colors"
+                className="w-full bg-secondary hover:bg-secondary/90 text-primary font-semibold py-3 text-lg rounded-lg transition-colors"
               >
                 Send Message
               </Button>

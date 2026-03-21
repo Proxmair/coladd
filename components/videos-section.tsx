@@ -100,7 +100,7 @@ export default function VideosSection() {
 
                 {/* Video Info */}
                 <div className="p-6 space-y-4">
-                  <h3 className="text-lg font-bold text-foreground line-clamp-2 group-hover:text-accent transition-colors">
+                  <h3 className="text-lg font-bold text-foreground line-clamp-2 group-hover:text-secondary transition-colors">
                     {video.title}
                   </h3>
 
@@ -110,7 +110,7 @@ export default function VideosSection() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold rounded-lg">
+                    <Button className="w-full bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-lg">
                       <Play className="w-4 h-4 mr-2" />
                       Watch Video
                     </Button>
@@ -127,7 +127,7 @@ export default function VideosSection() {
             </p>
             <Button
               asChild
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg rounded-lg"
+              className="bg-secondary hover:bg-secondary/90 text-primary-foreground px-8 py-6 text-lg rounded-lg"
             >
               <a
                 href="https://www.youtube.com"
