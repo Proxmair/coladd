@@ -2,14 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Menu, X } from 'lucide-react'
+
+const LOGO_URL =
+  'https://res.cloudinary.com/proxmaircloud/image/upload/v1774124473/products/ndg6rydh0jxbq0t3ulxi.png'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
 
-  const scrollToSection = (sectionId: string) => {
+    const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     element?.scrollIntoView({ behavior: 'smooth' })
     setActiveSection(sectionId)
@@ -37,54 +41,37 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-primary text-primary-foreground shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-30 md:h-42">
+          
           {/* Logo */}
-          <Link href="/" className="font-bold text-2xl">
-            Dr. Khurram
-          </Link>
+          <Link href="/" className="flex items-center gap-2">
+  <Image
+    src={LOGO_URL}
+    alt="Logo"
+    width={0}
+    height={0}
+    sizes="(max-width: 768px) 80px, (max-width: 1200px) 120px, 160px"
+    className="h-20 w-auto md:h-24 lg:h-28 xl:h-32 object-contain"
+    priority
+    onClick={() => scrollToSection('home')}
+  />
+</Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex gap-8">
-            <button
-              onClick={() => scrollToSection('home')}
-              className={`transition-colors ${
-                activeSection === 'home' ? 'text-accent' : 'hover:text-accent/80'
-              }`}
-            >
-              Home
-            </button>
-            <button
-              onClick={() => scrollToSection('contact')}
-              className={`transition-colors ${
-                activeSection === 'contact' ? 'text-accent' : 'hover:text-accent/80'
-              }`}
-            >
-              Contact
-            </button>
-            <button
-              onClick={() => scrollToSection('blog')}
-              className={`transition-colors ${
-                activeSection === 'blog' ? 'text-accent' : 'hover:text-accent/80'
-              }`}
-            >
-              Blog
-            </button>
-            <button
-              onClick={() => scrollToSection('videos')}
-              className={`transition-colors ${
-                activeSection === 'videos' ? 'text-accent' : 'hover:text-accent/80'
-              }`}
-            >
-              Videos
-            </button>
-            <button
-              onClick={() => scrollToSection('leaflets')}
-              className={`transition-colors ${
-                activeSection === 'leaflets' ? 'text-accent' : 'hover:text-accent/80'
-              }`}
-            >
-              Leaflets
-            </button>
+            {['home', 'contact', 'blog', 'videos', 'leaflets'].map((item) => (
+              <button
+                key={item}
+                onClick={() => scrollToSection(item)}
+                className={`capitalize transition-colors ${
+                  activeSection === item
+                    ? 'text-accent'
+                    : 'hover:text-accent/80'
+                }`}
+              >
+                {item}
+              </button>
+            ))}
           </div>
 
           {/* Admin Login Button */}
@@ -110,36 +97,15 @@ export default function Navbar() {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden pb-4 space-y-2">
-            <button
-              onClick={() => scrollToSection('home')}
-              className="block w-full text-left px-4 py-2 hover:bg-primary-foreground/10 rounded"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="block w-full text-left px-4 py-2 hover:bg-primary-foreground/10 rounded"
-            >
-              Contact
-            </button>
-            <button
-              onClick={() => scrollToSection('blog')}
-              className="block w-full text-left px-4 py-2 hover:bg-primary-foreground/10 rounded"
-            >
-              Blog
-            </button>
-            <button
-              onClick={() => scrollToSection('videos')}
-              className="block w-full text-left px-4 py-2 hover:bg-primary-foreground/10 rounded"
-            >
-              Videos
-            </button>
-            <button
-              onClick={() => scrollToSection('leaflets')}
-              className="block w-full text-left px-4 py-2 hover:bg-primary-foreground/10 rounded"
-            >
-              Leaflets
-            </button>
+            {['home', 'contact', 'blog', 'videos', 'leaflets'].map((item) => (
+              <button
+                key={item}
+                onClick={() => scrollToSection(item)}
+                className="block w-full text-left px-4 py-2 hover:bg-primary-foreground/10 rounded capitalize"
+              >
+                {item}
+              </button>
+            ))}
             <div className="px-4 pt-2">
               <Button
                 variant="secondary"

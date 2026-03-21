@@ -5,6 +5,11 @@ import { Facebook, Twitter, Linkedin, Instagram, Phone, Mail, MapPin } from 'luc
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    element?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <footer className="bg-primary text-primary-foreground">
       {/* Main Footer */}
@@ -12,9 +17,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* About */}
           <div>
-            <h3 className="font-bold text-xl mb-4">Dr. Khurram Baqai</h3>
+            <h3 className="font-bold text-3xl mb-4"><span className='text-secondary'>COL</span>A<span className='text-accent'>DD</span></h3>
             <p className="text-primary-foreground/80 text-sm leading-relaxed">
-              Providing exceptional medical care and patient education with dedication and compassion.
+              <span className='text-secondary'>Clinic of Liver</span> and <span className='text-accent'>Disgestive Disorder</span>
             </p>
           </div>
 
@@ -23,22 +28,22 @@ export default function Footer() {
             <h4 className="font-bold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#home" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a onClick={() => scrollToSection('home')} className="text-primary-foreground/80 hover:text-accent transition-colors hover:cursor-pointer">
                   Home
                 </a>
               </li>
               <li>
-                <a href="#blog" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a onClick={() => scrollToSection('blog')} className="text-primary-foreground/80 hover:text-accent transition-colors hover:cursor-pointer">
                   Articles
                 </a>
               </li>
               <li>
-                <a href="#videos" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a onClick={() => scrollToSection('videos')} className="text-primary-foreground/80 hover:text-accent transition-colors hover:cursor-pointer">
                   Videos
                 </a>
               </li>
               <li>
-                <a href="#contact" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a onClick={() => scrollToSection('conatct')} className="text-primary-foreground/80 hover:text-accent transition-colors hover:cursor-pointer">
                   Contact
                 </a>
               </li>
@@ -82,7 +87,6 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
         {/* Social Links */}
         <div className="border-t border-primary-foreground/20 pt-8 mb-8">
           <h4 className="font-bold mb-4 text-center">Follow Us</h4>
