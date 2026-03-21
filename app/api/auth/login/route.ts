@@ -8,17 +8,24 @@ export async function POST(req: Request) {
 
     const formData = await req.formData()
 
-    const email = formData.get("email") as string
+    const email = process.env.ADMIN_EMAIL
     const password = formData.get("password") as string
 
-    if (!email || !password) {
+    if (!email) {
       return NextResponse.json(
-        { message: "Email and password required" },
+        { message: "Eamil not added on db" },
         { status: 400 }
       )
     }
 
-    const user = await User.findOne({email,password})
+    if (!password) {
+      return NextResponse.json(
+        { message: "Password required" },
+        { status: 400 }
+      )
+    }
+
+    const user = await User.findOne({ email, password })
 
     if (!user) {
       return NextResponse.json(

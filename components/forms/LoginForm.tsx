@@ -1,6 +1,5 @@
 'use client '
 import { Button } from "@/components/ui/button"
-import { FloatingLabelInput } from "../ui/floatingInput"
 import PasswordInput from "@/components/ui/password-input"
 import { Spinner } from "@/components/ui/spinner"
 import { myToast } from "@/lib/utils"
@@ -14,7 +13,6 @@ const LoginForm = () => {
 
     const [isLoading, setIsLoading] = React.useState(false);
     const [loginData, setLoginData] = React.useState({
-        email: '',
         password: '',
     })
 
@@ -22,7 +20,6 @@ const LoginForm = () => {
         try {
             setIsLoading(true)
             const formData = new FormData()
-            formData.append("email", loginData.email)
             formData.append("password", loginData.password)
 
             const res = await fetch("/api/auth/login", {
@@ -51,22 +48,6 @@ const LoginForm = () => {
 
     return (
         <div className="space-y-4 mt-4">
-            <FloatingLabelInput
-                id="login-email"
-                label="Email"
-                type="email"
-                value={loginData.email}
-                onChange={(e) => {
-                    setLoginData({
-                        ...loginData,
-                        email: e.target.value,
-                    })
-                }
-
-                }
-                className='h-10.5'
-            />
-
             <PasswordInput
                 id="login-password"
                 label="Password"
