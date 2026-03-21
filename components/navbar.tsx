@@ -5,6 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Menu, X } from 'lucide-react'
+import LoginModal from './modals/LoginModal';
+import { usePathname } from 'next/navigation'
 
 const LOGO_URL =
   'https://res.cloudinary.com/proxmaircloud/image/upload/v1774124473/products/ndg6rydh0jxbq0t3ulxi.png'
@@ -12,13 +14,23 @@ const LOGO_URL =
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
+  const [loginModal, setLoginModal] = useState(false)
 
-    const scrollToSection = (sectionId: string) => {
+
+  const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     element?.scrollIntoView({ behavior: 'smooth' })
     setActiveSection(sectionId)
     setIsOpen(false)
   }
+
+  const handleAdminLogin = (e: any) => {
+    setLoginModal(true)
+  }
+  const pathname = usePathname()
+  useEffect(() => {
+    setLoginModal(false)
+  }, [pathname])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,20 +54,20 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-primary text-primary-foreground shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-30 md:h-42">
-          
+
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-  <Image
-    src={LOGO_URL}
-    alt="Logo"
-    width={0}
-    height={0}
-    sizes="(max-width: 768px) 80px, (max-width: 1200px) 120px, 160px"
-    className="h-20 w-auto md:h-24 lg:h-28 xl:h-32 object-contain"
-    priority
-    onClick={() => scrollToSection('home')}
-  />
-</Link>
+            <Image
+              src={LOGO_URL}
+              alt="Logo"
+              width={0}
+              height={0}
+              sizes="(max-width: 768px) 80px, (max-width: 1200px) 120px, 160px"
+              className="h-20 w-auto md:h-24 lg:h-28 xl:h-32 object-contain"
+              priority
+              onClick={() => scrollToSection('home')}
+            />
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex gap-8">
@@ -63,11 +75,10 @@ export default function Navbar() {
               <button
                 key={item}
                 onClick={() => scrollToSection(item)}
-                className={`capitalize transition-colors ${
-                  activeSection === item
-                    ? 'text-accent'
-                    : 'hover:text-accent/80'
-                }`}
+                className={`capitalize transition-colors ${activeSection === item
+                  ? 'text-accent'
+                  : 'hover:text-accent/80'
+                  }`}
               >
                 {item}
               </button>
@@ -79,6 +90,7 @@ export default function Navbar() {
             <Button
               variant="secondary"
               className="bg-secondary text-primary hover:bg-secondary/90"
+              onClick={handleAdminLogin}
             >
               Admin Login
             </Button>
@@ -110,12 +122,15 @@ export default function Navbar() {
               <Button
                 variant="secondary"
                 className="w-full bg-secondary text-primary hover:bg-secondary/90"
+                onClick={handleAdminLogin}
               >
                 Admin Login
               </Button>
             </div>
           </div>
         )}
+
+        <LoginModal open={loginModal} onOpenChange={setLoginModal} />
       </div>
     </nav>
   )
