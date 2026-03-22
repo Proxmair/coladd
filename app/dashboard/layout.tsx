@@ -6,19 +6,17 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { useTheme } from "next-themes"
 import { usePathname } from "next/navigation"
+import DashboardGuard from "./DashboardGuard"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { theme } = useTheme();
-  const lastSegment = pathname.split("/").filter(Boolean).pop() || "Design"
+  const lastSegment = pathname.split("/").filter(Boolean).pop() || ''
 
-  const title =
-    "Design " +
-    lastSegment.charAt(0).toUpperCase() +
-    lastSegment.slice(1)
+  const title = lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1)
 
   return (
-    <SidebarProvider className={`${theme === 'light' ? "bg-background/70": "bg-background/95"}`}>
+    <SidebarProvider className={`${theme === 'light' ? "bg-background/70" : "bg-background/95"}`}>
       <AppSidebar />
       <main className="w-full h-full">
         <div>
@@ -32,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
             <Separator className="flex-1 bg-primary/30" />
             <div className='p-4' >
-              {children}
+                <DashboardGuard>{children}</DashboardGuard>
             </div>
           </div>
         </div>
