@@ -6,7 +6,10 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Menu, X } from 'lucide-react'
 import LoginModal from './modals/LoginModal';
-import { usePathname } from 'next/navigation'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/store'
+import { setModal } from '@/store/slices/modalSlice'
+import VerifyOtpModal from './modals/VerifyOTPModal'
 
 const LOGO_URL =
   'https://res.cloudinary.com/proxmaircloud/image/upload/v1774124473/products/ndg6rydh0jxbq0t3ulxi.png'
@@ -14,8 +17,13 @@ const LOGO_URL =
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
-  const [loginModal, setLoginModal] = useState(false)
-
+  const dispatch = useDispatch()
+const openAuthModal = useSelector(
+    (state: RootState) => state.modal['auth'] || false
+  );
+   const openVerifyOTPModal = useSelector(
+    (state: RootState) => state.modal['verifyOTP'] || false
+  );
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -24,13 +32,12 @@ export default function Navbar() {
     setIsOpen(false)
   }
 
-  const handleAdminLogin = (e: any) => {
-    setLoginModal(true)
+  const setOpenAuthModal = (open: boolean) => {
+    dispatch(setModal({ key: 'auth', value: open }));
   }
-  const pathname = usePathname()
-  useEffect(() => {
-    setLoginModal(false)
-  }, [pathname])
+  const setOpenVerifyOTPModal = (open: boolean) => {
+    dispatch(setModal({ key: 'verifyOTP', value: open }));
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,7 +97,7 @@ export default function Navbar() {
             <Button
               variant="secondary"
               className="bg-secondary text-primary hover:bg-secondary/90"
-              onClick={handleAdminLogin}
+              onClick={() => setOpenAuthModal(true)}
             >
               Admin Login
             </Button>
@@ -122,15 +129,15 @@ export default function Navbar() {
               <Button
                 variant="secondary"
                 className="w-full bg-secondary text-primary hover:bg-secondary/90"
-                onClick={handleAdminLogin}
+                onClick={() => setOpenAuthModal(true)}
               >
                 Admin Login
               </Button>
             </div>
           </div>
         )}
-
-        <LoginModal open={loginModal} onOpenChange={setLoginModal} />
+        <VerifyOtpModal open={openVerifyOTPModal} onOpenChange={setOpenVerifyOTPModal} />
+        <LoginModal open={openAuthModal} onOpenChange={setOpenAuthModal} />
       </div>
     </nav>
   )
