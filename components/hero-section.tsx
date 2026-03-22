@@ -65,21 +65,6 @@ export default function HeroSection() {
                 Download Profile
               </Button>
             </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-12 pt-8 border-t border-border">
-              <div className="space-y-2">
-                <p className="text-3xl font-bold text-accent">10+</p>
-                <p className="text-sm text-foreground/80">Years Experience</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-3xl font-bold text-accent">500+</p>
-                <p className="text-sm text-foreground/80">Patients Treated</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-3xl font-bold text-accent">100%</p>
-                <p className="text-sm text-foreground/80">Patient Care</p>
-              </div>
-            </div>
           </div>
 
           {/* Sidebar */}
