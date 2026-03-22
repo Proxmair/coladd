@@ -13,6 +13,7 @@ import React from "react"
 import { RefreshCwIcon } from "lucide-react"
 import { useDispatch } from "react-redux"
 import { setModal } from "@/store/slices/modalSlice"
+import { ADMIN_EMAIL } from "@/lib/constant"
 
 const VerifyOtpForm = () => {
 
@@ -54,7 +55,7 @@ const VerifyOtpForm = () => {
             setIsResending(true)
 
             const form = new FormData()
-
+           form.append("email", ADMIN_EMAIL || '')
             const res = await fetch("/api/auth/forgot-password", {
                 method: "POST",
                 body: form,
