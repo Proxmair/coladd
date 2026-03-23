@@ -18,10 +18,10 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const dispatch = useDispatch()
-const openAuthModal = useSelector(
+  const openAuthModal = useSelector(
     (state: RootState) => state.modal['auth'] || false
   );
-   const openVerifyOTPModal = useSelector(
+  const openVerifyOTPModal = useSelector(
     (state: RootState) => state.modal['verifyOTP'] || false
   );
 
@@ -78,7 +78,7 @@ const openAuthModal = useSelector(
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex gap-8">
-            {['home', 'contact', 'blog', 'videos', 'leaflets'].map((item) => (
+            {['home', 'contact', 'blog', 'videos', 'library'].map((item) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item)}
