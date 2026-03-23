@@ -13,6 +13,24 @@ const UserSchema = new Schema(
     },
     resetOtp: String,
     resetOtpExpires: Date,
+
+    // New fields for profile CRUD
+    name: {
+      type: String,
+      default: 'Dr. Khurram Baqai',
+    },
+    designation: {
+      type: String,
+      default: 'Medical Professional',
+    },
+    description: {
+      type: String,
+      default: '',
+    },
+    pdfLink: {
+      type: String,
+      default: '',
+    },
   },
   { timestamps: true }
 )

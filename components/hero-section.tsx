@@ -1,16 +1,10 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { Download } from 'lucide-react'
 import ScheduleCard from '../components/ScheduleCard'
+import MainContent from '../components/MainContent'
 
 export default function HeroSection() {
-  const handleDownloadPDF = () => {
-    const link = document.createElement('a')
-    link.href = '#'
-    link.download = 'Dr_Khurram_Profile.pdf'
-    link.click()
-  }
+
 
   return (
     <section
@@ -30,38 +24,7 @@ export default function HeroSection() {
       <div className="relative max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-bold text-primary leading-tight">
-                Dr. Khurram Baqai
-              </h1>
-              <p className="text-xl md:text-2xl text-accent font-semibold">
-                Medical Professional
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <p className="text-lg text-foreground/90 leading-relaxed">
-                Welcome to Dr. Khurram Baqai's professional medical practice. With years of dedicated experience in healthcare, I am committed to providing exceptional medical care and guidance to my patients.
-              </p>
-              <p className="text-lg text-foreground/90 leading-relaxed">
-                My approach combines modern medical expertise with compassionate patient care. I specialize in comprehensive health consultations, patient education, and personalized treatment plans tailored to individual needs.
-              </p>
-              <p className="text-lg text-foreground/90 leading-relaxed">
-                Whether you're seeking preventive care, diagnosis, or ongoing treatment, I'm here to support your health journey with professionalism and dedication.
-              </p>
-            </div>
-
-            <div>
-              <Button
-                onClick={handleDownloadPDF}
-                className="bg-secondary hover:bg-secondary/90 text-primary font-semibold px-8 py-6 text-lg flex items-center gap-2 rounded-lg"
-              >
-                <Download className="w-5 h-5" />
-                Download Profile
-              </Button>
-            </div>
-          </div>
+         <MainContent/>
 
           {/* Sidebar */}
           <div className="lg:sticky lg:top-24">
