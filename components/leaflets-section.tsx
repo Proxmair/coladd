@@ -1,65 +1,32 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { FileText, Download } from 'lucide-react'
 
-const leaflets = [
-  {
-    id: 1,
-    title: 'Understanding Diabetes',
-    description: 'A comprehensive guide to diabetes management, prevention, and lifestyle modifications.',
-    icon: '🩺',
-    pdfUrl: '#',
-  },
-  {
-    id: 2,
-    title: 'Blood Pressure Management',
-    description: 'Learn how to manage high blood pressure through diet, exercise, and medication.',
-    icon: '❤️',
-    pdfUrl: '#',
-  },
-  {
-    id: 3,
-    title: 'Heart Health Essentials',
-    description: 'Essential information about maintaining cardiovascular health and preventing heart disease.',
-    icon: '💓',
-    pdfUrl: '#',
-  },
-  {
-    id: 4,
-    title: 'Respiratory Health Guide',
-    description: 'Understanding common respiratory conditions and maintaining lung health.',
-    icon: '🫁',
-    pdfUrl: '#',
-  },
-  {
-    id: 5,
-    title: 'Bone Health and Osteoporosis',
-    description: 'Information about bone health, osteoporosis prevention, and treatment options.',
-    icon: '🦴',
-    pdfUrl: '#',
-  },
-  {
-    id: 6,
-    title: 'Healthy Aging Guide',
-    description: 'Tips and strategies for maintaining health and vitality as you age.',
-    icon: '👴',
-    pdfUrl: '#',
-  },
-]
-
 export default function LeafletsSection() {
-  const handleDownload = (title: string) => {
-    // In production, this would download the actual PDF
-    alert(`Downloading: ${title}`)
-  }
+  const [leaflets, setLeaflets] = useState<any[]>([])
+
+  useEffect(() => {
+    const fetchLeaflets = async () => {
+      try {
+        const res = await fetch('/api/leaflets')
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.message)
+        setLeaflets((data.data || []).filter((item: any) => item.isActive))
+      } catch (error) {
+        console.error('Failed to fetch leaflets:', error)
+      }
+    }
+
+    fetchLeaflets()
+  }, [])
 
   return (
     <section id="leaflets" className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="space-y-12">
-          {/* Section Header */}
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
               <FileText className="w-8 h-8 text-accent" />
@@ -70,19 +37,20 @@ export default function LeafletsSection() {
             </p>
           </div>
 
-          {/* Leaflets Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {leaflets.map((leaflet) => (
               <Card
-                key={leaflet.id}
+                key={leaflet._id}
                 className="bg-card border-2 border-accent/10 hover:border-accent/40 overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 flex flex-col"
               >
-                {/* Icon/Header */}
                 <div className="bg-gradient-to-r from-secondary to-accent p-8 flex items-center justify-center">
-                  <span className="text-6xl">{leaflet.icon}</span>
+                  {leaflet.icon ? (
+                    <img src={leaflet.icon} alt={leaflet.title} className="w-20 h-20 object-cover rounded-xl border border-white/30" />
+                  ) : (
+                    <FileText className="w-16 h-16 text-primary" />
+                  )}
                 </div>
 
-                {/* Content */}
                 <div className="p-6 space-y-4 flex flex-col flex-grow">
                   <h3 className="text-xl font-bold text-foreground">
                     {leaflet.title}
@@ -91,18 +59,25 @@ export default function LeafletsSection() {
                     {leaflet.description}
                   </p>
 
-                  {/* Download Button */}
-                  <Button
-                    onClick={() => handleDownload(leaflet.title)}
-                    className="w-full bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-lg mt-auto flex items-center justify-center gap-2"
+                  <a
+                    href={leaflet.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto"
                   >
-                    <Download className="w-4 h-4" />
-                    Download PDF
-                  </Button>
+                    <Button className="w-full bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-lg flex items-center justify-center gap-2">
+                      <Download className="w-4 h-4" />
+                      Download PDF
+                    </Button>
+                  </a>
                 </div>
               </Card>
             ))}
           </div>
+
+          {leaflets.length === 0 && (
+            <p className="text-center py-6 text-gray-500">No leaflets found</p>
+          )}
         </div>
       </div>
     </section>
