@@ -4,53 +4,15 @@ import Footer from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { connectDB } from '@/lib/mongodb'
+import Blog from '@/models/Blog'
 
-const blogPosts = [
-  {
-    id: 1,
-    title: 'Understanding Your Health: A Comprehensive Guide',
-    description: 'Learn the fundamentals of maintaining good health through proper nutrition, exercise, and regular check-ups.',
-    category: 'Health Tips',
-    date: 'March 15, 2024',
-  },
-  {
-    id: 2,
-    title: 'The Importance of Preventive Care',
-    description: 'Discover why preventive healthcare is crucial and how regular screenings can save your life.',
-    category: 'Medical Insights',
-    date: 'March 10, 2024',
-  },
-  {
-    id: 3,
-    title: 'Managing Stress for Better Health',
-    description: 'Explore practical techniques to manage stress and improve your overall well-being.',
-    category: 'Wellness',
-    date: 'March 5, 2024',
-  },
-  {
-    id: 4,
-    title: 'Nutrition and Disease Prevention',
-    description: 'Learn how proper nutrition can help prevent chronic diseases and promote longevity.',
-    category: 'Nutrition',
-    date: 'February 28, 2024',
-  },
-  {
-    id: 5,
-    title: 'Exercise Guidelines for Different Age Groups',
-    description: 'Understand the recommended exercise routines tailored for your age and fitness level.',
-    category: 'Fitness',
-    date: 'February 20, 2024',
-  },
-  {
-    id: 6,
-    title: 'Mental Health: Breaking the Stigma',
-    description: 'An in-depth look at mental health awareness and seeking professional help.',
-    category: 'Mental Health',
-    date: 'February 15, 2024',
-  },
-]
+export const dynamic = 'force-dynamic'
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  await connectDB()
+  const blogPosts = await Blog.find().sort({ createdAt: -1 }).lean()
+
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
@@ -69,7 +31,7 @@ export default function BlogPage() {
           </Link>
           <h1 className="text-5xl md:text-6xl font-bold mb-4">All Articles</h1>
           <p className="text-lg text-primary-foreground/90 max-w-2xl">
-            Explore our comprehensive collection of healthcare articles and medical insights.
+            Explore our latest healthcare articles and medical insights.
           </p>
         </div>
       </div>
@@ -78,19 +40,25 @@ export default function BlogPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="space-y-6">
           {blogPosts.map((post) => (
-            <Link key={post.id} href={`/blog/${post.id}`}>
+            <Link key={String(post._id)} href={`/blog/${String(post._id)}`}>
               <Card className="p-6 md:p-8 bg-card border-2 border-accent/10 hover:border-accent/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:bg-card/80">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Content */}
                   <div className="md:col-span-2 space-y-3">
                     <div className="flex items-center gap-3">
                       <span className="bg-accent text-primary text-xs font-bold px-3 py-1 rounded-full">
-                        {post.category}
+                        {post.details?.tags?.[0] || 'General'}
                       </span>
-                      <span className="text-sm text-foreground/60">{post.date}</span>
+                      <span className="text-sm text-foreground/60">
+                        {new Date(post.details?.date || post.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </span>
                     </div>
                     <h2 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors">
-                      {post.title}
+                      {post.details?.heading || post.heading}
                     </h2>
                     <p className="text-foreground/80">
                       {post.description}

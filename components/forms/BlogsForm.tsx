@@ -1,58 +1,28 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import ImageInput from '../ui/input-image'
 
 type BlogsFormProps = {
   onSubmit: (data: any) => void
   defaultValues?: any
 }
-
-// ---------------- IMAGE UPLOAD COMPONENT ----------------
-function ImageInput({ defaultImage, onFileSelect }: any) {
-  const [preview, setPreview] = useState<string | null>(defaultImage || null)
-  const [file, setFile] = useState<File | null>(null)
-
-  useEffect(() => {
-    // Show preview for selected file
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => setPreview(reader.result as string)
-      reader.readAsDataURL(file)
-    }
-  }, [file])
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0]
-    if (selected) {
-      setFile(selected)
-      onFileSelect(selected)
-    }
-  }
-
-  return (
-    <div>
-      <label className="font-semibold mb-1 block">Image</label>
-      <input type="file" accept="image/*" onChange={handleChange} className="block mb-2" />
-      {preview && (
-        <img
-          src={preview}
-          alt="Preview"
-          className="w-36 h-36 object-cover rounded-md border mt-1"
-        />
-      )}
-    </div>
-  )
-}
-
 // ---------------- BLOGS FORM ----------------
 export default function BlogsForm({ onSubmit, defaultValues }: BlogsFormProps) {
   const [heading, setHeading] = useState(defaultValues?.heading || '')
   const [description, setDescription] = useState(defaultValues?.description || '')
   const [image, setImage] = useState<File | null>(null)
   const [defaultImage, setDefaultImage] = useState(defaultValues?.image || null)
+
+  useEffect(() => {
+    setHeading(defaultValues?.heading || '')
+    setDescription(defaultValues?.description || '')
+    setImage(null)
+    setDefaultImage(defaultValues?.image || null)
+  }, [defaultValues])
 
   const handleSubmit = () => {
     onSubmit({

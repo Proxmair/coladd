@@ -6,9 +6,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import BlogsForm from '../forms/BlogsForm'
+import ContentForm from '../forms/BlogContentForm'
 
-interface BlogsTableModalProps {
+interface ContentTableModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: (data: any) => void
@@ -16,24 +16,27 @@ interface BlogsTableModalProps {
   mode?: 'add' | 'edit'
 }
 
-export default function BlogsTableModal({
+export default function ContentTableModal({
   open,
   onOpenChange,
   onSubmit,
   defaultValues,
   mode = 'add',
-}: BlogsTableModalProps) {
+}: ContentTableModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:w-125 w-[90%]">
         <DialogHeader>
           <DialogTitle className="text-center text-xl font-bold">
-            {mode === 'edit' ? 'Edit Blog' : 'Add Blog'}
+            {mode === 'edit' ? 'Edit Content' : 'Add Content'}
           </DialogTitle>
         </DialogHeader>
 
-        <BlogsForm
-          onSubmit={onSubmit}
+        <ContentForm
+          onSubmit={(data: any) => {
+            onSubmit(data)
+            onOpenChange(false)
+          }}
           defaultValues={defaultValues}
         />
       </DialogContent>

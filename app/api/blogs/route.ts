@@ -67,7 +67,7 @@ export async function PUT(req: Request) {
 
     if (heading) blog.heading = heading;
     if (description) blog.description = description;
-    if (imageFile) blog.image = await uploadImage(imageFile); // Upload new image if provided
+    if (imageFile) blog.image = await uploadImage(imageFile);
 
     await blog.save();
 
