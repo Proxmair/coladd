@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server'
 import { connectDB } from '@/lib/mongodb'
 import User from '@/models/User'
 import { ADMIN_EMAIL } from '@/lib/constant'
-import { v2 as cloudinary } from "cloudinary"
-import { uploadPDF } from '@/lib/cloudinaryUpload'
+import { uploadPDF } from '@/lib/uploadFiles'
 export async function GET(req: Request) {
   try {
     await connectDB()
