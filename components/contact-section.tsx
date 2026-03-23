@@ -5,16 +5,21 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Mail } from 'lucide-react'
+import { myToast } from '@/lib/utils'
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
-    contact: '',
+    contactNumber: '',
     message: '',
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
@@ -22,107 +27,139 @@ export default function ContactSection() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Form submission logic would go here
-    console.log('Form submitted:', formData)
-    alert('Thank you for your message! We will get back to you soon.')
-    setFormData({ name: '', email: '', contact: '', message: '' })
+
+    try {
+      // 🔒 Basic validation
+      if (!formData.fullName || !formData.email || !formData.message) {
+        return myToast.error('Please fill all required fields')
+      }
+
+      setLoading(true)
+
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong')
+      }
+
+      myToast.success('Message sent successfully!')
+
+      // Reset form
+      setFormData({
+        fullName: '',
+        email: '',
+        contactNumber: '',
+        message: '',
+      })
+    } catch (err: any) {
+      myToast.error(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <section id="contact" className="py-16 px-4 sm:px-6 lg:px-8 bg-secondary/5">
+    <section
+      id="contact"
+      className="py-16 px-4 sm:px-6 lg:px-8 bg-secondary/5"
+    >
       <div className="max-w-4xl mx-auto">
         <div className="space-y-8">
-          {/* Section Header */}
+
+          {/* Header */}
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
               <Mail className="w-8 h-8 text-accent" />
-              <h2 className="text-4xl md:text-5xl font-bold text-primary">Get In Touch</h2>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary">
+                Get In Touch
+              </h2>
             </div>
             <p className="text-lg text-foreground/80">
-              Have questions? Send me a message and I'll respond as soon as possible.
+              Have questions? Send a message and get a response soon.
             </p>
           </div>
 
-          {/* Contact Form */}
+          {/* Form */}
           <Card className="p-8 md:p-12 bg-card border-2 border-accent/20">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name Field */}
+
+              {/* Name */}
               <div>
-                <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-2">
+                <label className="block text-sm font-semibold mb-2">
                   Full Name
                 </label>
                 <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={formData.name}
+                  name="fullName"
+                  value={formData.fullName}
                   onChange={handleChange}
+                  placeholder="Enter your full name"
                   required
-                  className="w-full px-4 py-3 border-2 border-border rounded-lg focus:border-accent focus:outline-none"
                 />
               </div>
 
-              {/* Email Field */}
+              {/* Email */}
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-2">
+                <label className="block text-sm font-semibold mb-2">
                   Email Address
                 </label>
                 <Input
-                  id="email"
                   name="email"
                   type="email"
-                  placeholder="your.email@example.com"
                   value={formData.email}
                   onChange={handleChange}
+                  placeholder="your.email@example.com"
                   required
-                  className="w-full px-4 py-3 border-2 border-border rounded-lg focus:border-accent focus:outline-none"
                 />
               </div>
 
-              {/* Contact Number Field */}
+              {/* Contact */}
               <div>
-                <label htmlFor="contact" className="block text-sm font-semibold text-foreground mb-2">
+                <label className="block text-sm font-semibold mb-2">
                   Contact Number
                 </label>
                 <Input
-                  id="contact"
-                  name="contact"
-                  type="tel"
-                  placeholder="+92-300-1234567"
-                  value={formData.contact}
+                  name="contactNumber"
+                  value={formData.contactNumber}
                   onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border-2 border-border rounded-lg focus:border-accent focus:outline-none"
+                  placeholder="+92-300-1234567"
                 />
               </div>
 
-              {/* Message Field */}
+              {/* Message */}
               <div>
-                <label htmlFor="message" className="block text-sm font-semibold text-foreground mb-2">
+                <label className="block text-sm font-semibold mb-2">
                   Message
                 </label>
                 <textarea
-                  id="message"
                   name="message"
-                  placeholder="Your message here..."
                   value={formData.message}
                   onChange={handleChange}
+                  placeholder="Your message here..."
                   required
                   rows={6}
-                  className="w-full px-4 py-3 border-2 border-border rounded-lg focus:border-accent focus:outline-none resize-none bg-background text-foreground"
+                  className="w-full px-4 py-3 border-2 border-border rounded-lg focus:border-accent focus:outline-none resize-none bg-background"
                 />
               </div>
 
-              {/* Submit Button */}
+              {/* Button */}
               <Button
                 type="submit"
-                className="w-full bg-secondary hover:bg-secondary/90 text-primary font-semibold py-3 text-lg rounded-lg transition-colors"
+                disabled={loading}
+                className="w-full bg-secondary hover:bg-secondary/90 text-primary font-semibold py-3 text-lg rounded-lg"
               >
-                Send Message
+                {loading ? 'Sending...' : 'Send Message'}
               </Button>
+
             </form>
           </Card>
         </div>
