@@ -1,29 +1,36 @@
 import {
-  LayoutDashboard,
-  Settings,
-  User,
-  Wand,
+  Handshake,
+  Book,
+  Play,
+  Newspaper,
+  House
 } from "lucide-react"
 
 export const NAV_ITEMS = [
   {
     label: "Home",
     href: "/dashboard/home",
-    icon: LayoutDashboard,
+    icon: House,
   },
   {
     label: "Blogs",
     href: "/dashboard/blogs",
-    icon: User,
+    icon: Newspaper,
   },
   {
     label: "Videos",
     href: "/dashboard/videos",
-    icon: Wand,
+    icon: Play,
   },
   {
     label: "Patient Information",
     href: "/dashboard/leaflets",
-    icon: Settings,
+    icon: Book,
   },
+  {
+    label: "Social Links",
+    href: "/dashboard/social",
+    icon: Handshake,
+  },
+
 ]

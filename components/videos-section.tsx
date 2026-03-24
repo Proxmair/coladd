@@ -7,20 +7,30 @@ import { Play, Video } from 'lucide-react'
 
 export default function VideosSection() {
   const [videos, setVideos] = useState<any[]>([])
+  const [youtubeLink, setYoutubeLink] = useState('')
 
   useEffect(() => {
-    const fetchVideos = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch('/api/videos')
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.message)
-        setVideos((data.data || []).filter((item: any) => item.isActive))
+        const [videosRes, profileRes] = await Promise.all([
+          fetch('/api/videos'),
+          fetch('/api/home/social'),
+        ])
+
+        const videosData = await videosRes.json()
+        const socialData = await profileRes.json()
+
+        if (!videosRes.ok) throw new Error(videosData.message)
+        if (!profileRes.ok) throw new Error(socialData.message)
+
+        setVideos((videosData.data || []).filter((item: any) => item.isActive))
+        setYoutubeLink(socialData.data?.youtubeLink || '')
       } catch (error) {
         console.error('Failed to fetch videos:', error)
       }
     }
 
-    fetchVideos()
+    fetchData()
   }, [])
 
   return (
@@ -111,7 +121,7 @@ export default function VideosSection() {
               className="bg-secondary hover:bg-secondary/90 text-primary-foreground px-8 py-6 text-lg rounded-lg"
             >
               <a
-                href="https://www.youtube.com"
+                href={youtubeLink || 'https://www.youtube.com'}
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -1,14 +1,50 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Facebook, Twitter, Linkedin, Instagram, Phone, Mail, MapPin } from 'lucide-react'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
+  const [socials, setSocials] = useState({
+    facebookLink: '',
+    twitterLink: '',
+    instagramLink: '',
+    linkedinLink: '',
+  })
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     element?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  useEffect(() => {
+    const fetchSocials = async () => {
+      try {
+        const res = await fetch('/api/home/social')
+        const data = await res.json()
+
+        if (res.ok && data.data) {
+          setSocials({
+            facebookLink: data.data.facebookLink || '',
+            twitterLink: data.data.twitterLink || '',
+            instagramLink: data.data.instagramLink || '',
+            linkedinLink: data.data.linkedinLink || '',
+          })
+        }
+      } catch (error) {
+        console.error('Failed to fetch social links:', error)
+      }
+    }
+
+    fetchSocials()
+  }, [])
+
+  const socialItems = [
+    { href: socials.facebookLink, label: 'Facebook', icon: Facebook },
+    { href: socials.twitterLink, label: 'Twitter', icon: Twitter },
+    { href: socials.linkedinLink, label: 'LinkedIn', icon: Linkedin },
+    { href: socials.instagramLink, label: 'Instagram', icon: Instagram },
+  ].filter((item) => item.href)
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -91,42 +127,22 @@ export default function Footer() {
         <div className="border-t border-primary-foreground/20 pt-8 mb-8">
           <h4 className="font-bold mb-4 text-center">Follow Us</h4>
           <div className="flex justify-center gap-4">
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-primary-foreground/10 hover:bg-secondary p-3 rounded-full text-secondary hover:text-primary transition-all"
-              aria-label="Facebook"
-            >
-              <Facebook className="w-5 h-5" />
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-primary-foreground/10 hover:bg-secondary p-3 rounded-full text-secondary hover:text-primary transition-all"
-              aria-label="Twitter"
-            >
-              <Twitter className="w-5 h-5" />
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-primary-foreground/10 hover:bg-secondary p-3 rounded-full text-secondary hover:text-primary transition-all"
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="w-5 h-5" />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-primary-foreground/10 hover:bg-secondary p-3 rounded-full text-secondary hover:text-primary transition-all"
-              aria-label="Instagram"
-            >
-              <Instagram className="w-5 h-5" />
-            </a>
+            {socialItems.map((item) => {
+              const Icon = item.icon
+
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-primary-foreground/10 hover:bg-secondary p-3 rounded-full text-secondary hover:text-primary transition-all"
+                  aria-label={item.label}
+                >
+                  <Icon className="w-5 h-5" />
+                </a>
+              )
+            })}
           </div>
         </div>
       </div>

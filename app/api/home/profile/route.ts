@@ -6,7 +6,10 @@ import { uploadPDF } from '@/lib/uploadFiles'
 export async function GET(req: Request) {
   try {
     await connectDB()
-    const user = await User.findOne({}, 'name designation description pdfLink')
+    const user = await User.findOne(
+      {},
+      'name designation description pdfLink facebookLink youtubeLink twitterLink instagramLink linkedinLink'
+    )
     return NextResponse.json({ data: user })
   } catch (err) {
     return NextResponse.json({ message: 'Server error', error: err }, { status: 500 })
@@ -27,13 +30,17 @@ export async function POST(req: Request) {
       user.pdfLink = await uploadPDF(pdfFile)
     }
 
-    const name = formData.get("name") as string
-    const designation = formData.get("designation") as string
-    const description = formData.get("description") as string
+    if (formData.has("name")) {
+      user.name = ((formData.get("name") as string) || "").trim()
+    }
 
-    if (name?.trim()) user.name = name
-    if (designation?.trim()) user.designation = designation
-    if (description?.trim()) user.description = description
+    if (formData.has("designation")) {
+      user.designation = ((formData.get("designation") as string) || "").trim()
+    }
+
+    if (formData.has("description")) {
+      user.description = (formData.get("description") as string) || ""
+    }
 
     await user.save()
 

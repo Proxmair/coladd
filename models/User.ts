@@ -1,4 +1,4 @@
-import { Schema, models, model } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 const UserSchema = new Schema(
   {
@@ -31,8 +31,33 @@ const UserSchema = new Schema(
       type: String,
       default: '',
     },
+    facebookLink: {
+      type: String,
+    },
+    youtubeLink: {
+      type: String,
+    },
+    twitterLink: {
+      type: String,
+    },
+    instagramLink: {
+      type: String,
+    },
+    linkedinLink: {
+      type: String,
+    }
   },
   { timestamps: true }
 )
 
-export default models.User || model('User', UserSchema)
+if (
+  process.env.NODE_ENV !== 'production' &&
+  mongoose.models.User &&
+  !mongoose.models.User.schema.path('facebookLink')
+) {
+  delete mongoose.models.User
+}
+
+const User = mongoose.models.User || mongoose.model('User', UserSchema)
+
+export default User
