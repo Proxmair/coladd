@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     }
 
     // send to YOUR email (admin inbox)
-    await sendContactInformationEmail('umair.xmair@gmail.com', {
+    await sendContactInformationEmail('drkhurrambaqai@gmail.com', {
       fullName,
       email,
       contactNumber,

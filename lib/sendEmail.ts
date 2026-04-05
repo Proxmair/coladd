@@ -1,6 +1,6 @@
 
 import { Resend } from 'resend';
-const resend = new Resend('re_ZPsdNmwf_MAW7o1aCSqPF4q3SFT9Byxi7');
+const resend = new Resend('re_CDTvAstm_6s9DoDRdfAD82RkmGcJhBuzs');
 export const sendEmail = async (emails: string[], subject: string, html:string) => {
     try {
         await resend.emails.send({
