@@ -27,6 +27,10 @@ export default function ScheduleCard() {
     const [api, setApi] = useState<CarouselApi>()
     const [current, setCurrent] = useState(1)
 
+    const isMobile =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(max-width: 768px)').matches
+
     // ---------------- FETCH SCHEDULE ----------------
     const fetchSchedules = async () => {
         try {
@@ -109,45 +113,46 @@ export default function ScheduleCard() {
 
     // MULTIPLE CARDS => VERTICAL CAROUSEL
     return (
-       <Carousel
-        setApi={setApi}
-        orientation="vertical"
-        opts={{
-            align: 'start',
-            loop: true,
-        }}
-         plugins={[
-        Autoplay({
-          delay: 6000,
-        }),
-      ]}
-        className="w-full max-w-full relative"
-    >
-        {/* TOP CONTROLS */}
-        <div className="flex items-center justify-center gap-4 mb-4">
-            <CarouselPrevious
-                className="static translate-x-0 translate-y-0 rotate-90"
-            />
+        <Carousel
+            setApi={setApi}
+            orientation="vertical"
+            opts={{
+                align: 'start',
+                loop: true,
+                watchDrag: !isMobile,
+            }}
+            plugins={[
+                Autoplay({
+                    delay: 6000,
+                }),
+            ]}
+            className="w-full max-w-full relative"
+        >
+            {/* TOP CONTROLS */}
+            <div className="flex items-center justify-center gap-4 mb-4">
+                <CarouselPrevious
+                    className="static translate-x-0 translate-y-0 rotate-90"
+                />
 
-            <p className="text-sm font-medium text-foreground/80">
-                Schedule {current} of {scheduleData.length}
-            </p>
+                <p className="text-sm font-medium text-foreground/80">
+                    Schedule {current} of {scheduleData.length}
+                </p>
 
-            <CarouselNext
-                className="static translate-x-0 translate-y-0 rotate-90"
-            />
-        </div>
+                <CarouselNext
+                    className="static translate-x-0 translate-y-0 rotate-90"
+                />
+            </div>
 
-        <CarouselContent className="h-[850px]">
-            {scheduleData.map((item, index) => (
-                <CarouselItem
-                    key={'schedule-card-carousel-' + index}
-                    className="basis-full"
-                >
-                    <ScheduleSingleCard item={item} />
-                </CarouselItem>
-            ))}
-        </CarouselContent>
-    </Carousel>
+            <CarouselContent className="h-[850px]">
+                {scheduleData.map((item, index) => (
+                    <CarouselItem
+                        key={'schedule-card-carousel-' + index}
+                        className="basis-full"
+                    >
+                        <ScheduleSingleCard item={item} />
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+        </Carousel>
     )
 }
