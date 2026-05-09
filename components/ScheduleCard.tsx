@@ -1,9 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { MapPin, Clock, Phone } from 'lucide-react'
 import { myToast } from '@/lib/utils'
+import ScheduleSingleCard from './ScheduleSingleCard'
+import Autoplay from "embla-carousel-autoplay"
+
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+    type CarouselApi,
+} from './ui/carousel'
 
 interface ScheduleItem {
     location: string[]
@@ -15,35 +24,43 @@ export default function ScheduleCard() {
     const [scheduleData, setScheduleData] = useState<ScheduleItem[]>([])
     const [loading, setLoading] = useState<boolean>(true)
 
+    const [api, setApi] = useState<CarouselApi>()
+    const [current, setCurrent] = useState(1)
+
     // ---------------- FETCH SCHEDULE ----------------
     const fetchSchedules = async () => {
         try {
             setLoading(true)
-            const res = await fetch("/api/home/schedule")
+
+            const res = await fetch('/api/home/schedule')
             const data = await res.json()
 
             if (!res.ok) throw new Error(data.message)
 
-            // Filter out empty schedules entirely
             const filteredData = (data.data || [])
                 .map((item: ScheduleItem) => ({
-                    location: (item.location || []).filter(loc => loc?.trim()),
+                    location: (item.location || []).filter(loc =>
+                        loc?.trim()
+                    ),
+
                     timings: Object.fromEntries(
                         Object.entries(item.timings || {}).filter(
-                            ([_, times]) => Array.isArray(times) && times.some(t => t.trim())
+                            ([_, times]) =>
+                                Array.isArray(times) &&
+                                times.some(t => t.trim())
                         )
                     ),
-                    contact: (item.contact || []).filter(c => c?.trim()),
+
+                    contact: (item.contact || []).filter(c =>
+                        c?.trim()
+                    ),
                 }))
-                // Remove items that have no location, no timings, and no contact
                 .filter(
                     (item: ScheduleItem) =>
                         item.location.length > 0 ||
                         Object.keys(item.timings).length > 0 ||
                         item.contact.length > 0
                 )
-
-            console.log('filteredData', filteredData)
 
             setScheduleData(filteredData)
         } catch (err: any) {
@@ -57,87 +74,80 @@ export default function ScheduleCard() {
         fetchSchedules()
     }, [])
 
-    const formatTimings = (timings: Record<string, string[]>) => {
-        if (!timings) return []
+    // ---------------- TRACK CURRENT SLIDE ----------------
+    useEffect(() => {
+        if (!api) return
 
-        return Object.entries(timings)
-            .filter(([_, v]) => Array.isArray(v) && v.length)
-            .map(([day, times]) => ({
-                day,
-                times: times.filter(t => t.trim()).join(' | ')
-            }))
-            .filter(t => t.times) // skip if no valid timing
-    }
+        setCurrent(api.selectedScrollSnap() + 1)
 
-    if (loading)
+        api.on('select', () => {
+            setCurrent(api.selectedScrollSnap() + 1)
+        })
+    }, [api])
+
+    if (loading) {
         return (
             <p className="text-center text-sm text-foreground/70 mt-4">
                 Loading schedule...
             </p>
         )
+    }
 
+    // SINGLE CARD
+    if (scheduleData.length <= 1) {
+        return (
+            <>
+                {scheduleData.map((item, index) => (
+                    <ScheduleSingleCard
+                        key={'schedule-card-' + index}
+                        item={item}
+                    />
+                ))}
+            </>
+        )
+    }
+
+    // MULTIPLE CARDS => VERTICAL CAROUSEL
     return (
-        <>
+       <Carousel
+        setApi={setApi}
+        orientation="vertical"
+        opts={{
+            align: 'start',
+            loop: true,
+        }}
+         plugins={[
+        Autoplay({
+          delay: 6000,
+        }),
+      ]}
+        className="w-full max-w-full relative"
+    >
+        {/* TOP CONTROLS */}
+        <div className="flex items-center justify-center gap-4 mb-4">
+            <CarouselPrevious
+                className="static translate-x-0 translate-y-0 rotate-90"
+            />
+
+            <p className="text-sm font-medium text-foreground/80">
+                Schedule {current} of {scheduleData.length}
+            </p>
+
+            <CarouselNext
+                className="static translate-x-0 translate-y-0 rotate-90"
+            />
+        </div>
+
+        <CarouselContent className="h-[850px]">
             {scheduleData.map((item, index) => (
-                <Card key={index} className="bg-card secondary-2 border-secondary/20 overflow-hidden mt-4 ml-2">
-                    <div className="bg-linear-to-r from-primary to-accent text-primary-foreground p-6">
-                        <h3 className="font-bold text-xl mb-6">Schedule & Contact</h3>
-                    </div>
-
-                    <div className="p-6 space-y-6">
-                        {/* LOCATION */}
-                        {item.location.length > 0 && (
-                            <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                    <MapPin className="w-5 h-5 text-accent flex-shrink-0" />
-                                    <h4 className="font-semibold text-foreground">Location</h4>
-                                </div>
-                                {item.location.map((loc, i) => (
-                                    <p key={i} className="text-sm text-foreground/80 ml-7">
-                                        {loc}
-                                    </p>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* TIMINGS */}
-                        {Object.keys(item.timings).length > 0 && (
-                            <div className="border-t border-border pt-6">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <Clock className="w-5 h-5 text-accent flex-shrink-0" />
-                                    <h4 className="font-semibold text-foreground">Timings</h4>
-                                </div>
-                                <div className="text-sm text-foreground/80 ml-7 space-y-2">
-                                    {formatTimings(item.timings).map((t, i) => (
-                                        <p key={i}>
-                                            <span className="font-medium">{t.day}</span>
-                                            <br />
-                                            {t.times}
-                                        </p>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* CONTACT */}
-                        {item.contact.length > 0 && (
-                            <div className="border-t border-border pt-6">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <Phone className="w-5 h-5 text-accent flex-shrink-0" />
-                                    <h4 className="font-semibold text-foreground">Contact</h4>
-                                </div>
-                                <div className="text-sm text-foreground/80 ml-7 space-y-1">
-                                    {item.contact.map((c, i) => (
-                                        <p key={i} className="hover:text-accent transition-colors">
-                                            <a href={c.startsWith('03') ? `tel:${c}` : c}>{c}</a>
-                                        </p>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </Card>
+                <CarouselItem
+                    key={'schedule-card-carousel-' + index}
+                    className="basis-full"
+                >
+                    <ScheduleSingleCard item={item} />
+                </CarouselItem>
             ))}
-        </>
+        </CarouselContent>
+    </Carousel>
     )
 }

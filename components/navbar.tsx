@@ -10,11 +10,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import { setModal } from '@/store/slices/modalSlice'
 import VerifyOtpModal from './modals/VerifyOTPModal'
+import { useSearchParams } from 'next/navigation'
 
 const LOGO_URL =
   'https://res.cloudinary.com/proxmaircloud/image/upload/v1774124473/products/ndg6rydh0jxbq0t3ulxi.png'
 
 export default function Navbar() {
+  const searchParams = useSearchParams()
+  const showAdminButton =
+  searchParams.has('admin') ||
+  searchParams.has('isAdmin') ||
+  searchParams.has('is-admin') ||
+  searchParams.has('Admin')
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const dispatch = useDispatch()
@@ -77,7 +84,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex gap-8">
+          <div className="hidden md:flex gap-8 justify-center w-full">
             {['home', 'contact', 'blog', 'videos', 'library'].map((item) => (
               <button
                 key={item}
@@ -93,7 +100,7 @@ export default function Navbar() {
           </div>
 
           {/* Admin Login Button */}
-          <div className="hidden md:block">
+          {showAdminButton && <div className="hidden md:block">
             <Button
               variant="secondary"
               className="bg-secondary text-primary hover:bg-secondary/90"
@@ -101,7 +108,7 @@ export default function Navbar() {
             >
               Admin Login
             </Button>
-          </div>
+          </div>}
 
           {/* Mobile Menu Button */}
           <button
@@ -125,7 +132,7 @@ export default function Navbar() {
                 {item}
               </button>
             ))}
-            <div className="px-4 pt-2">
+            {showAdminButton && <div className="px-4 pt-2">
               <Button
                 variant="secondary"
                 className="w-full bg-secondary text-primary hover:bg-secondary/90"
@@ -133,7 +140,7 @@ export default function Navbar() {
               >
                 Admin Login
               </Button>
-            </div>
+            </div>}
           </div>
         )}
         <VerifyOtpModal open={openVerifyOTPModal} onOpenChange={setOpenVerifyOTPModal} />
