@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: 'Dr. Khurram Baqai',
   description: 'Dr. Khurram Baqai - Medical expertise and patient care services. Schedule appointments online.',
   generator: 'v0.app',
+  verification: {
+    google: '0DigOGVCPeABPw5Plg_35WauNI3bPENBstHjPuRxNsY',
+  },
   icons: {
     icon: [
       {
